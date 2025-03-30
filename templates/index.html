@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facial Emotion Recognition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #1a3c6e;
+            padding-bottom: 20px;
+        }
+        
+        .institute-name {
+            color: #1a3c6e;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .department {
+            color: #1a3c6e;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .course-info {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .academic-year {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .project-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1a3c6e;
+            margin: 20px 0;
+        }
+        
+        .submitted-by {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .student-info {
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .upload-section {
+            text-align: center;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        
+        .tab.active {
+            background-color: #1a3c6e;
+            color: white;
+            border-color: #1a3c6e;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .preview-image {
+            max-width: 300px;
+            max-height: 300px;
+            margin: 20px auto;
+            display: none;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        #videoElement {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            margin: 20px auto;
+            display: block;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .button {
+            background-color: #1a3c6e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .button:hover {
+            background-color: #0f2e5c;
+        }
+        
+        .button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .results-section {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .results-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #1a3c6e;
+        }
+        
+        .emotion-result {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a3c6e;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .confidence-bars {
+            margin-top: 20px;
+        }
+        
+        .emotion-bar {
+            margin-bottom: 15px;
+        }
+        
+        .emotion-label {
+            display: inline-block;
+            width: 100px;
+            font-weight: bold;
+        }
+        
+        .bar-container {
+            display: inline-block;
+            width: calc(100% - 120px);
+            background-color: #eee;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .bar {
+            height: 100%;
+            background-color: #1a3c6e;
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .percentage {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #1a3c6e;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .camera-error {
+            color: #d9534f;
+            display: none;
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #d9534f;
+            border-radius: 4px;
+            background-color: #f9f2f4;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="institute-name">National Institute of Technology Karnataka, Surathkal</div>
+            <div class="department">Department Of Information Technology</div>
+            <div class="course-info">Deep Learning (IT353) Course Project</div>
+            <div class="academic-year">Academic Year: 2024-2025</div>
+            <div class="project-title">Facial Emotion Recognition Model</div>
+            <div class="submitted-by">Submitted by:</div>
+            <div class="student-info">Abhishek Srinivas (221AI004)</div>
+            <div class="student-info">Pranav Moothedath (221AI030)</div>
+        </div>
+        
+        <div class="content">
+            <div class="upload-section">
+                <h2>Facial Emotion Recognition</h2>
+                <p>Choose an input method below:</p>
+                
+                <div class="tab-container">
+                    <div class="tab active" id="uploadTab">Upload Image</div>
+                    <div class="tab" id="cameraTab">Use Webcam</div>
+                </div>
+                
+                <div class="tab-content active" id="uploadContent">
+                    <p>Please upload a clear image of a face to analyze the emotion.</p>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    <button class="button" id="uploadButton">Select Image</button>
+                    <div>
+                        <img id="uploadPreview" class="preview-image" alt="Preview">
+                    </div>
+                    <button class="button" id="analyzeUploadButton" disabled>Analyze Emotion</button>
+                </div>
+                
+                <div class="tab-content" id="cameraContent">
+                    <p>Use your webcam to capture a face for analysis.</p>
+                    <div class="camera-error" id="cameraError">
+                        Unable to access camera. Please ensure you've granted camera permissions or try using the Upload Image option instead.
+                    </div>
+                    <video id="videoElement" autoplay playsinline></video>
+                    <div>
+                        <button class="button" id="captureButton">Capture Photo</button>
+                        <button class="button" id="retakeButton" style="display: none;">Retake Photo</button>
+                    </div>
+                    <div>
+                        <canvas id="canvasElement" style="display: none;"></canvas>
+                        <img id="capturePreview" class="preview-image" alt="Capture Preview">
+                    </div>
+                    <button class="button" id="analyzeCaptureButton" disabled>Analyze Emotion</button>
+                </div>
+                
+                <div class="loading" id="loadingSection">
+                    <div class="loading-spinner"></div>
+                    <p>Analyzing emotion...</p>
+                </div>
+            </div>
+            
+            <div class="results-section" id="resultsSection">
+                <div class="results-title">Emotion Recognition Results</div>
+                <div class="emotion-result" id="mainEmotionResult">Processing...</div>
+                
+                <div class="confidence-bars" id="confidenceBars">
+                    <!-- Bars will be populated dynamically with JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            © 2025 - Facial Emotion Recognition Project - NIT Karnataka, Surathkal
+        </footer>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        const uploadTab = document.getElementById('uploadTab');
+        const cameraTab = document.getElementById('cameraTab');
+        const uploadContent = document.getElementById('uploadContent');
+        const cameraContent = document.getElementById('cameraContent');
+        
+        uploadTab.addEventListener('click', function() {
+            uploadTab.classList.add('active');
+            cameraTab.classList.remove('active');
+            uploadContent.classList.add('active');
+            cameraContent.classList.remove('active');
+        });
+        
+        cameraTab.addEventListener('click', function() {
+            cameraTab.classList.add('active');
+            uploadTab.classList.remove('active');
+            cameraContent.classList.add('active');
+            uploadContent.classList.remove('active');
+            setupCamera();
+        });
+        
+        // Get DOM elements
+        const imageInput = document.getElementById('imageInput');
+        const uploadButton = document.getElementById('uploadButton');
+        const analyzeUploadButton = document.getElementById('analyzeUploadButton');
+        const uploadPreview = document.getElementById('uploadPreview');
+        const videoElement = document.getElementById('videoElement');
+        const captureButton = document.getElementById('captureButton');
+        const retakeButton = document.getElementById('retakeButton');
+        const canvasElement = document.getElementById('canvasElement');
+        const capturePreview = document.getElementById('capturePreview');
+        const analyzeCaptureButton = document.getElementById('analyzeCaptureButton');
+        const resultsSection = document.getElementById('resultsSection');
+        const loadingSection = document.getElementById('loadingSection');
+        const mainEmotionResult = document.getElementById('mainEmotionResult');
+        const confidenceBars = document.getElementById('confidenceBars');
+        const cameraError = document.getElementById('cameraError');
+        
+        // Upload image functionality
+        uploadButton.addEventListener('click', function() {
+            imageInput.click();
+        });
+        
+        imageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadPreview.src = e.target.result;
+                    uploadPreview.style.display = 'block';
+                    analyzeUploadButton.disabled = false;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        analyzeUploadButton.addEventListener('click', function() {
+            if (uploadPreview.src) {
+                analyzeImage(uploadPreview.src);
+            }
+        });
+        
+        // Webcam functionality
+        let stream = null;
+        
+        function setupCamera() {
+            // Only set up camera if we're on the camera tab
+            if (!cameraContent.classList.contains('active')) return;
+            
+            // Check if we already have a stream
+            if (stream) return;
+            
+            // Get user media
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(mediaStream) {
+                    stream = mediaStream;
+                    videoElement.srcObject = stream;
+                    cameraError.style.display = 'none';
+                })
+                .catch(function(err) {
+                    console.error("Error accessing camera: ", err);
+                    cameraError.style.display = 'block';
+                });
+        }
+        
+        captureButton.addEventListener('click', function() {
+            if (!stream) return;
+            
+            // Use smaller dimensions for the capture
+            const aspectRatio = videoElement.videoWidth / videoElement.videoHeight;
+            const captureWidth = 480;  // Smaller size
+            const captureHeight = Math.round(captureWidth / aspectRatio);
+            
+            canvasElement.width = captureWidth;
+            canvasElement.height = captureHeight;
+            
+            // Draw video frame to canvas (resized)
+            const ctx = canvasElement.getContext('2d');
+            ctx.drawImage(videoElement, 0, 0, captureWidth, captureHeight);
+            
+            // Convert canvas to image with reduced quality
+            const imageDataURL = canvasElement.toDataURL('image/jpeg', 0.8);
+            capturePreview.src = imageDataURL;
+            capturePreview.style.display = 'block';
+            
+            // Show retake button and enable analyze button
+            videoElement.style.display = 'none';
+            captureButton.style.display = 'none';
+            retakeButton.style.display = 'inline-block';
+            analyzeCaptureButton.disabled = false;
+        });
+        
+        retakeButton.addEventListener('click', function() {
+            // Show video again
+            videoElement.style.display = 'block';
+            captureButton.style.display = 'inline-block';
+            retakeButton.style.display = 'none';
+            capturePreview.style.display = 'none';
+            analyzeCaptureButton.disabled = true;
+        });
+        
+        analyzeCaptureButton.addEventListener('click', function() {
+            if (capturePreview.src) {
+                analyzeImage(capturePreview.src);
+            }
+        });
+        
+        // Replace your current analyzeImage function with this one
+        async function analyzeImage(imageData) {
+            // Show loading spinner
+            loadingSection.style.display = 'block';
+            
+            // Hide results if they were shown before
+            resultsSection.style.display = 'none';
+            
+            try {
+                // Resize the image to maximum 600x600 pixels
+                const resizedImageData = await resizeImage(imageData, 600, 600);
+                
+                // Create form data for the API request
+                const formData = new FormData();
+                
+                // Add the resized image data
+                formData.append('image_data', resizedImageData);
+                
+                // Send the request to the Flask API
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Server error: ' + response.status);
+                }
+                
+                const data = await response.json();
+                
+                // Hide loading spinner
+                loadingSection.style.display = 'none';
+                
+                // Check if there's an error
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                    return;
+                }
+                
+                // Show results section
+                resultsSection.style.display = 'block';
+                
+                // Update the main emotion result
+                const mainEmotion = data.predicted_emotion;
+                const mainEmotionProb = Math.round(data.probabilities[data.emotions.indexOf(mainEmotion)]);
+                mainEmotionResult.textContent = `${mainEmotion} (${mainEmotionProb}%)`;
+                
+                // Clear previous confidence bars
+                confidenceBars.innerHTML = '';
+                
+                // Sort emotions by probability (descending)
+                const sortedEmotions = data.emotions.map((emotion, index) => ({
+                    name: emotion,
+                    probability: data.probabilities[index]
+                })).sort((a, b) => b.probability - a.probability);
+                
+                // Create emotion bars
+                sortedEmotions.forEach(item => {
+                    const emotion = item.name;
+                    const probability = item.probability;
+                    
+                    // Create the HTML for this emotion bar
+                    const barHTML = `
+                        <div class="emotion-bar">
+                            <span class="emotion-label">${emotion}</span>
+                            <div class="bar-container">
+                                <div class="bar" style="width: ${probability}%;"></div>
+                            </div>
+                            <span class="percentage">${Math.round(probability)}%</span>
+                        </div>
+                    `;
+                    
+                    // Add it to the confidence bars section
+                    confidenceBars.innerHTML += barHTML;
+                });
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                console.error('Error:', error);
+                loadingSection.style.display = 'none';
+                alert('Error analyzing the image. Please try again with a smaller image.');
+            }
+        }
+        
+        // Clean up camera resources when navigating away
+        window.addEventListener('beforeunload', function() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+
+        // Add this new function
+function resizeImage(dataURL, maxWidth, maxHeight) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = function() {
+            let width = img.width;
+            let height = img.height;
+            
+            // Calculate new dimensions
+            if (width > height) {
+                if (width > maxWidth) {
+                    height = Math.round(height * maxWidth / width);
+                    width = maxWidth;
+                }
+            } else {
+                if (height > maxHeight) {
+                    width = Math.round(width * maxHeight / height);
+                    height = maxHeight;
+                }
+            }
+            
+            // Create canvas and resize
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Get resized image
+            resolve(canvas.toDataURL('image/jpeg', 0.7));
+        };
+        img.src = dataURL;
+    });
+}
+    </script>
+</body>
+</html>
