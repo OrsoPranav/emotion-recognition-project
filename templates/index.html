@@ -4,326 +4,849 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Facial Emotion Recognition</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #3a86ff;
+            --primary-dark: #2667cc;
+            --secondary: #ff006e;
+            --secondary-light: #ffafcc;
+            --accent: #8338ec;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #06d6a0;
+            --warning: #ffbe0b;
+            --background: #f0f6ff;
+            --card-bg: #ffffff;
+            --gradient-bg: linear-gradient(135deg, #3a86ff, #8338ec);
+            --gradient-accent: linear-gradient(135deg, #ff006e, #8338ec);
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Montserrat', sans-serif;
         }
         
         body {
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: var(--background);
+            color: var(--dark);
             line-height: 1.6;
         }
         
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 700;
+        }
+        
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 2rem;
         }
         
         .header {
             text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #1a3c6e;
-            padding-bottom: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-gradient {
+            background: var(--gradient-bg);
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: -1;
+        }
+        
+        .institute-logo {
+            width: 275px;
+            height: 275px;
+            object-fit: contain;
+            background-color: white;
+            border-radius: 0%;
+            padding: 10px;
+            margin: 0 auto 1.5rem;
+            display: block;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 3px solid rgba(255, 255, 255, 0.3);
         }
         
         .institute-name {
-            color: #1a3c6e;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         .department {
-            color: #1a3c6e;
-            font-size: 20px;
-            margin-bottom: 10px;
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.9);
         }
         
         .course-info {
-            font-size: 18px;
-            margin-bottom: 5px;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
         }
         
         .academic-year {
-            font-size: 16px;
-            margin-bottom: 15px;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        
+        .project-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 0 0 20px 20px;
+            position: relative;
         }
         
         .project-title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #1a3c6e;
-            margin: 20px 0;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            display: inline-block;
+            position: relative;
+        }
+        
+        .project-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--gradient-accent);
+            margin-top: 0.5rem;
+            border-radius: 2px;
+        }
+        
+        .project-subtitle {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: var(--dark);
+            opacity: 0.8;
         }
         
         .submitted-by {
-            font-size: 16px;
-            margin-bottom: 5px;
+            font-size: 1rem;
+            margin-top: 2rem;
+            font-weight: 500;
+            color: var(--dark);
+            opacity: 0.7;
         }
         
-        .student-info {
-            margin-bottom: 20px;
+        .students-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .student-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            min-width: 250px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .student-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--secondary);
         }
         
         .content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-        
-        .upload-section {
-            text-align: center;
-            padding: 20px;
-            border: 2px dashed #ccc;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin-bottom: 3rem;
+            background: var(--card-bg);
+            overflow: hidden;
         }
         
         .tab-container {
             display: flex;
-            border-bottom: 1px solid #ccc;
-            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            background: #f8f9fa;
         }
         
         .tab {
-            padding: 10px 20px;
+            padding: 1.2rem 2rem;
             cursor: pointer;
-            background-color: #f1f1f1;
-            border: 1px solid #ccc;
-            border-bottom: none;
-            border-radius: 5px 5px 0 0;
-            margin-right: 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: var(--dark);
+            opacity: 0.7;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tab:hover {
+            background-color: rgba(58, 134, 255, 0.05);
+            opacity: 0.9;
         }
         
         .tab.active {
-            background-color: #1a3c6e;
-            color: white;
-            border-color: #1a3c6e;
+            color: var(--primary);
+            opacity: 1;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
         }
         
         .tab-content {
             display: none;
-            padding: 20px 0;
+            padding: 3rem 2rem;
         }
         
         .tab-content.active {
             display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .upload-section {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+            margin: 0.5rem auto 0;
+            border-radius: 2px;
+        }
+        
+        .upload-zone {
+            border: 2px dashed rgba(58, 134, 255, 0.3);
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            background: rgba(58, 134, 255, 0.03);
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(58, 134, 255, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            transition: transform 0.3s;
+        }
+        
+        .upload-zone:hover .upload-icon {
+            transform: scale(1.1);
+        }
+        
+        .upload-text {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+        
+        .preview-container {
+            margin: 2rem auto;
+            max-width: 400px;
+            position: relative;
         }
         
         .preview-image {
-            max-width: 300px;
-            max-height: 300px;
-            margin: 20px auto;
+            max-width: 100%;
+            max-height: 350px;
+            margin: 0 auto;
             display: none;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         #videoElement {
             width: 100%;
             max-width: 400px;
             height: auto;
-            margin: 20px auto;
+            margin: 0 auto;
             display: block;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .button {
-            background-color: #1a3c6e;
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 4px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 30px;
             cursor: pointer;
-            margin: 10px;
-            transition: background-color 0.3s;
+            margin: 0.5rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 3px 10px rgba(58, 134, 255, 0.3);
         }
         
         .button:hover {
-            background-color: #0f2e5c;
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(58, 134, 255, 0.4);
+        }
+        
+        .button:active {
+            transform: translateY(0);
         }
         
         .button:disabled {
             background-color: #ccc;
             cursor: not-allowed;
+            box-shadow: none;
         }
         
-        .results-section {
-            display: none;
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            border: 1px solid #ddd;
+        .button.capture {
+            background: var(--success);
+            box-shadow: 0 3px 10px rgba(6, 214, 160, 0.3);
         }
         
-        .results-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #1a3c6e;
+        .button.capture:hover {
+            background: #05b084;
+            box-shadow: 0 5px 15px rgba(6, 214, 160, 0.4);
         }
         
-        .emotion-result {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1a3c6e;
-            margin: 20px 0;
-            text-align: center;
+        .button.analyze {
+            background: var(--secondary);
+            box-shadow: 0 3px 10px rgba(255, 0, 110, 0.3);
         }
         
-        .confidence-bars {
-            margin-top: 20px;
+        .button.analyze:hover {
+            background: #d10059;
+            box-shadow: 0 5px 15px rgba(255, 0, 110, 0.4);
         }
         
-        .emotion-bar {
-            margin-bottom: 15px;
-        }
-        
-        .emotion-label {
-            display: inline-block;
-            width: 100px;
-            font-weight: bold;
-        }
-        
-        .bar-container {
-            display: inline-block;
-            width: calc(100% - 120px);
-            background-color: #eee;
-            height: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        
-        .bar {
-            height: 100%;
-            background-color: #1a3c6e;
-            border-radius: 10px;
-            transition: width 0.5s ease-in-out;
-        }
-        
-        .percentage {
-            margin-left: 10px;
-            font-weight: bold;
+        .actions-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
         }
         
         .loading {
             display: none;
             text-align: center;
-            margin: 20px 0;
+            margin: 3rem 0;
         }
         
         .loading-spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #1a3c6e;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .loading-spinner div {
+            position: absolute;
+            top: 33px;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+        }
+        
+        .loading-spinner div:nth-child(1) {
+            left: 8px;
+            animation: loading1 0.6s infinite;
+        }
+        
+        .loading-spinner div:nth-child(2) {
+            left: 8px;
+            animation: loading2 0.6s infinite;
+        }
+        
+        .loading-spinner div:nth-child(3) {
+            left: 32px;
+            animation: loading2 0.6s infinite;
+        }
+        
+        .loading-spinner div:nth-child(4) {
+            left: 56px;
+            animation: loading3 0.6s infinite;
+        }
+        
+        @keyframes loading1 {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes loading2 {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(24px, 0); }
+        }
+        
+        @keyframes loading3 {
+            0% { transform: scale(1); }
+            100% { transform: scale(0); }
+        }
+        
+        .loading p {
+            margin-top: 1rem;
+            color: var(--primary);
+            font-weight: 500;
         }
         
         .camera-error {
-            color: #d9534f;
+            color: var(--secondary);
             display: none;
-            margin: 20px 0;
-            padding: 10px;
-            border: 1px solid #d9534f;
-            border-radius: 4px;
-            background-color: #f9f2f4;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border-radius: 10px;
+            background-color: rgba(255, 0, 110, 0.05);
+            font-weight: 500;
+            text-align: center;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .results-section {
+            display: none;
+            margin-top: 4rem;
+            margin-bottom: 2rem;
+            animation: slideUp 0.5s;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .results-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .results-header {
+            background: var(--gradient-bg);
+            padding: 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .results-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: -1;
+        }
+        
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .results-body {
+            padding: 2rem;
+        }
+        
+        .emotion-result {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            text-align: center;
+            padding: 1.5rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        }
+        
+        .emotion-result i {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        
+        .emotion-result .percentage {
+            font-size: 1rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+            display: block;
+        }
+        
+        .confidence-bars {
+            margin-top: 2rem;
+        }
+        
+        .emotion-bar {
+            margin-bottom: 1.2rem;
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .emotion-bar:hover {
+            transform: translateX(5px);
+            background: rgba(58, 134, 255, 0.03);
+        }
+        
+        .emotion-label {
+            min-width: 100px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .bar-container {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.05);
+            height: 10px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin: 0 1rem;
+        }
+        
+        .bar {
+            height: 100%;
+            background: var(--gradient-bg);
+            border-radius: 20px;
+            transition: width 1s cubic-bezier(0.65, 0, 0.35, 1);
+            width: 0%;
+        }
+        
+        .percentage {
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 45px;
+            text-align: right;
         }
         
         footer {
             text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            font-size: 14px;
-            color: #666;
+            margin-top: 4rem;
+            padding: 2rem;
+            color: rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .footer-wave {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            transform: rotate(180deg);
+        }
+        
+        .footer-wave svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 50px;
+        }
+        
+        .footer-wave .shape-fill {
+            fill: #FFFFFF;
+        }
+        
+        .footer-content {
+            margin-top: 3rem;
+        }
+        
+        .footer-logo {
+            max-width: 80px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-text {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .social-icons {
+            margin-top: 1.5rem;
+        }
+        
+        .social-icons a {
+            color: var(--primary);
+            margin: 0 10px;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .social-icons a:hover {
+            color: white;
+            background: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(58, 134, 255, 0.3);
+        }
+        
+        /* Animation for the result bars */
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header-gradient {
+                padding: 2rem 1rem;
+            }
+            
+            .institute-name {
+                font-size: 1.5rem;
+            }
+            
+            .department {
+                font-size: 1.2rem;
+            }
+            
+            .project-title {
+                font-size: 2rem;
+            }
+            
+            .tab {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .tab-content {
+                padding: 2rem 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .emotion-label {
+                min-width: 80px;
+            }
+            
+            .bar-container {
+                margin: 0 0.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="institute-name">National Institute of Technology Karnataka, Surathkal</div>
-            <div class="department">Department Of Information Technology</div>
-            <div class="course-info">Deep Learning (IT353) Course Project</div>
-            <div class="academic-year">Academic Year: 2024-2025</div>
-            <div class="project-title">Facial Emotion Recognition Model</div>
-            <div class="submitted-by">Submitted by:</div>
-            <div class="student-info">Abhishek Srinivas (221AI004)</div>
-            <div class="student-info">Pranav Moothedath (221AI030)</div>
+            <div class="header-gradient">
+                <img src="static/images.png" alt="Institute Logo" class="institute-logo">
+                <div class="institute-name">National Institute of Technology Karnataka, Surathkal</div>
+                <div class="department">Department Of Information Technology</div>
+                <div class="course-info">Deep Learning (IT353) Course Project</div>
+                <div class="academic-year">Academic Year: 2024-2025</div>
+            </div>
+            
+            <div class="project-section">
+                <h1 class="project-title">Facial Emotion Recognition Model</h1>
+                <p class="project-subtitle">A deep learning approach to recognize human emotions from facial expressions</p>
+                
+                <div class="submitted-by">Submitted by:</div>
+                <div class="students-container">
+                    <div class="student-card">
+                        <div><i class="fas fa-user-graduate"></i> Abhishek Srinivas</div>
+                        <div style="opacity: 0.7; font-size: 0.9rem;">221AI004</div>
+                    </div>
+                    <div class="student-card">
+                        <div><i class="fas fa-user-graduate"></i> Pranav Moothedath</div>
+                        <div style="opacity: 0.7; font-size: 0.9rem;">221AI030</div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="content">
-            <div class="upload-section">
-                <h2>Facial Emotion Recognition</h2>
-                <p>Choose an input method below:</p>
-                
-                <div class="tab-container">
-                    <div class="tab active" id="uploadTab">Upload Image</div>
-                    <div class="tab" id="cameraTab">Use Webcam</div>
-                </div>
-                
-                <div class="tab-content active" id="uploadContent">
-                    <p>Please upload a clear image of a face to analyze the emotion.</p>
-                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
-                    <button class="button" id="uploadButton">Select Image</button>
-                    <div>
+            <div class="tab-container">
+                <div class="tab active" id="uploadTab"><i class="fas fa-upload"></i> Upload Image</div>
+                <div class="tab" id="cameraTab"><i class="fas fa-camera"></i> Use Webcam</div>
+            </div>
+            
+            <div class="tab-content active" id="uploadContent">
+                <div class="upload-section">
+                    <h2 class="section-title"><i class="fas fa-smile"></i> Upload an Image</h2>
+                    
+                    <div class="upload-zone">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <p class="upload-text">Drag & drop an image here or click to browse</p>
+                        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                        <button class="button" id="uploadButton"><i class="fas fa-file-image"></i> Select Image</button>
+                    </div>
+                    
+                    <div class="preview-container">
                         <img id="uploadPreview" class="preview-image" alt="Preview">
                     </div>
-                    <button class="button" id="analyzeUploadButton" disabled>Analyze Emotion</button>
-                </div>
-                
-                <div class="tab-content" id="cameraContent">
-                    <p>Use your webcam to capture a face for analysis.</p>
-                    <div class="camera-error" id="cameraError">
-                        Unable to access camera. Please ensure you've granted camera permissions or try using the Upload Image option instead.
+                    
+                    <div class="actions-container">
+                        <button class="button analyze" id="analyzeUploadButton" disabled><i class="fas fa-brain"></i> Analyze Emotion</button>
                     </div>
-                    <video id="videoElement" autoplay playsinline></video>
-                    <div>
-                        <button class="button" id="captureButton">Capture Photo</button>
-                        <button class="button" id="retakeButton" style="display: none;">Retake Photo</button>
-                    </div>
-                    <div>
-                        <canvas id="canvasElement" style="display: none;"></canvas>
-                        <img id="capturePreview" class="preview-image" alt="Capture Preview">
-                    </div>
-                    <button class="button" id="analyzeCaptureButton" disabled>Analyze Emotion</button>
-                </div>
-                
-                <div class="loading" id="loadingSection">
-                    <div class="loading-spinner"></div>
-                    <p>Analyzing emotion...</p>
                 </div>
             </div>
             
-            <div class="results-section" id="resultsSection">
-                <div class="results-title">Emotion Recognition Results</div>
-                <div class="emotion-result" id="mainEmotionResult">Processing...</div>
+            <div class="tab-content" id="cameraContent">
+                <div class="upload-section">
+                    <h2 class="section-title"><i class="fas fa-camera"></i> Capture from Webcam</h2>
+                    
+                    <div class="camera-error" id="cameraError">
+                        <i class="fas fa-exclamation-triangle"></i> Unable to access camera. Please ensure you've granted camera permissions or try using the Upload Image option instead.
+                    </div>
+                    
+                    <div class="preview-container">
+                        <video id="videoElement" autoplay playsinline></video>
+                        <canvas id="canvasElement" style="display: none;"></canvas>
+                        <img id="capturePreview" class="preview-image" alt="Capture Preview">
+                    </div>
+                    
+                    <div class="actions-container">
+                        <button class="button capture" id="captureButton"><i class="fas fa-camera"></i> Capture Photo</button>
+                        <button class="button" id="retakeButton" style="display: none;"><i class="fas fa-redo"></i> Retake Photo</button>
+                        <button class="button analyze" id="analyzeCaptureButton" disabled><i class="fas fa-brain"></i> Analyze Emotion</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="loading" id="loadingSection">
+                <div class="loading-spinner">
+                    <div></div><div></div><div></div><div></div>
+                </div>
+                <p>Analyzing facial expression...</p>
+            </div>
+        </div>
+        
+        <div class="results-section" id="resultsSection">
+            <div class="results-card">
+                <div class="results-header">
+                    <div class="results-title"><i class="fas fa-chart-bar"></i> Emotion Recognition Results</div>
+                </div>
                 
-                <div class="confidence-bars" id="confidenceBars">
-                    <!-- Bars will be populated dynamically with JavaScript -->
+                <div class="results-body">
+                    <div class="emotion-result" id="mainEmotionResult">
+                        <i class="fas fa-smile"></i>
+                        Processing...
+                        <span class="percentage">0%</span>
+                    </div>
+                    
+                    <div class="confidence-bars" id="confidenceBars">
+                        <!-- Bars will be populated dynamically with JavaScript -->
+                    </div>
                 </div>
             </div>
         </div>
         
         <footer>
-            © 2025 - Facial Emotion Recognition Project - NIT Karnataka, Surathkal
+            <div class="footer-text">© 2025 - Facial Emotion Recognition Project - NIT Karnataka, Surathkal</div>
+            <div class="footer-text">Developed as part of the Deep Learning (IT353) Course</div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
         </footer>
     </div>
 
@@ -500,7 +1023,39 @@
                 // Update the main emotion result
                 const mainEmotion = data.predicted_emotion;
                 const mainEmotionProb = Math.round(data.probabilities[data.emotions.indexOf(mainEmotion)]);
-                mainEmotionResult.textContent = `${mainEmotion} (${mainEmotionProb}%)`;
+                
+                // Add emotion icon based on emotion
+                let emotionIcon = '';
+                switch(mainEmotion.toLowerCase()) {
+                    case 'happy':
+                        emotionIcon = '<i class="fas fa-smile"></i>';
+                        break;
+                    case 'sad':
+                        emotionIcon = '<i class="fas fa-frown"></i>';
+                        break;
+                    case 'angry':
+                        emotionIcon = '<i class="fas fa-angry"></i>';
+                        break;
+                    case 'surprised':
+                    case 'surprise':
+                        emotionIcon = '<i class="fas fa-surprise"></i>';
+                        break;
+                    case 'fear':
+                    case 'afraid':
+                        emotionIcon = '<i class="fas fa-ghost"></i>';
+                        break;
+                    case 'disgust':
+                    case 'disgusted':
+                        emotionIcon = '<i class="fas fa-dizzy"></i>';
+                        break;
+                    case 'neutral':
+                        emotionIcon = '<i class="fas fa-meh"></i>';
+                        break;
+                    default:
+                        emotionIcon = '<i class="fas fa-face-thinking"></i>';
+                }
+                
+                mainEmotionResult.innerHTML = `${emotionIcon} ${mainEmotion} <span style="opacity: 0.8;">(${mainEmotionProb}%)</span>`;
                 
                 // Clear previous confidence bars
                 confidenceBars.innerHTML = '';
@@ -521,7 +1076,7 @@
                         <div class="emotion-bar">
                             <span class="emotion-label">${emotion}</span>
                             <div class="bar-container">
-                                <div class="bar" style="width: ${probability}%;"></div>
+                                <div class="bar" style="width: 0%;"></div>
                             </div>
                             <span class="percentage">${Math.round(probability)}%</span>
                         </div>
@@ -530,6 +1085,14 @@
                     // Add it to the confidence bars section
                     confidenceBars.innerHTML += barHTML;
                 });
+                
+                // Animate the bars after a small delay
+                setTimeout(() => {
+                    const bars = document.querySelectorAll('.bar');
+                    sortedEmotions.forEach((item, index) => {
+                        bars[index].style.width = `${item.probability}%`;
+                    });
+                }, 100);
                 
                 // Scroll to results
                 resultsSection.scrollIntoView({ behavior: 'smooth' });
@@ -548,39 +1111,39 @@
         });
 
         // Add this new function
-function resizeImage(dataURL, maxWidth, maxHeight) {
-    return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = function() {
-            let width = img.width;
-            let height = img.height;
-            
-            // Calculate new dimensions
-            if (width > height) {
-                if (width > maxWidth) {
-                    height = Math.round(height * maxWidth / width);
-                    width = maxWidth;
-                }
-            } else {
-                if (height > maxHeight) {
-                    width = Math.round(width * maxHeight / height);
-                    height = maxHeight;
-                }
-            }
-            
-            // Create canvas and resize
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            // Get resized image
-            resolve(canvas.toDataURL('image/jpeg', 0.7));
-        };
-        img.src = dataURL;
-    });
-}
+        function resizeImage(dataURL, maxWidth, maxHeight) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = function() {
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    // Calculate new dimensions
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height = Math.round(height * maxWidth / width);
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width = Math.round(width * maxHeight / height);
+                            height = maxHeight;
+                        }
+                    }
+                    
+                    // Create canvas and resize
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Get resized image
+                    resolve(canvas.toDataURL('image/jpeg', 0.7));
+                };
+                img.src = dataURL;
+            });
+        }
     </script>
 </body>
 </html>
