@@ -133,7 +133,7 @@ def predict():
         else:
             return jsonify({'error': 'No image provided'}), 400
         
-        # Preprocess the image
+        # Preprocess the image for prediction
         image_tensor = preprocess_image(image)
         
         # Make prediction
@@ -142,14 +142,30 @@ def predict():
             probabilities = torch.nn.functional.softmax(outputs, dim=1)[0]
             probabilities = probabilities.cpu().numpy() * 100  # Convert to percentages
         
+        predicted_emotion = EMOTIONS[np.argmax(probabilities)]
+        
+        # Save the original image to the 'saved_images' directory
+        try:
+            save_dir = os.path.join(os.path.dirname(__file__), "saved_images")
+            os.makedirs(save_dir, exist_ok=True)
+            # Determine the next index based on existing files
+            existing_files = [f for f in os.listdir(save_dir) if f.endswith('.jpg')]
+            next_index = len(existing_files) + 1
+            save_filename = f"{next_index}_{predicted_emotion}.jpg"
+            save_path = os.path.join(save_dir, save_filename)
+            image.save(save_path, format='JPEG')
+            logger.info(f"Image saved as {save_filename}")
+        except Exception as save_err:
+            logger.error(f"Error saving image: {str(save_err)}")
+        
         # Create result dictionary
         results = {
             'emotions': EMOTIONS,
             'probabilities': probabilities.tolist(),
-            'predicted_emotion': EMOTIONS[np.argmax(probabilities)]
+            'predicted_emotion': predicted_emotion
         }
         
-        logger.info(f"Prediction successful: {results['predicted_emotion']}")
+        logger.info(f"Prediction successful: {predicted_emotion}")
         return jsonify(results)
     
     except Exception as e:
@@ -161,6 +177,7 @@ if __name__ == '__main__':
     # Create necessary directories
     os.makedirs(os.path.join(os.path.dirname(__file__), "models"), exist_ok=True)
     os.makedirs(os.path.join(os.path.dirname(__file__), "static"), exist_ok=True)
+    os.makedirs(os.path.join(os.path.dirname(__file__), "saved_images"), exist_ok=True)
     
     # Get port from environment variable (for Render compatibility)
     port = int(os.environ.get("PORT", 5000))
